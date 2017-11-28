@@ -4,7 +4,8 @@ Release:        1%{?dist}
 Summary:        The Sodium crypto library
 License:        ISC
 URL:            http://libsodium.org/
-Source0:        http://download.libsodium.org/libsodium/releases/%{name}-%{version}.tar.gz
+#Source0:        http://download.libsodium.org/libsodium/releases/%{name}-%{version}.tar.gz
+Source0:        %{name}-%{version}.tar.gz
 
 %description
 Sodium is a new, easy-to-use software library for encryption, decryption, 
