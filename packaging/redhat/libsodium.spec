@@ -32,6 +32,7 @@ developing applications that use %{name} libraries.
 %setup -q
 
 %build
+./autogen.sh
 %configure --disable-static --disable-silent-rules
 make %{?_smp_mflags}
 
