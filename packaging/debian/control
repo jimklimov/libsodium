@@ -1,0 +1,23 @@
+Source: libsodium
+Priority: extra
+Build-Depends: debhelper (>= 7), quilt
+Section: libs
+
+Package: libsodium13
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Network communication, cryptography and signaturing library
+
+Package: libsodium-dev
+Section: libdevel
+Architecture: any
+Depends: libsodium13 (= ${binary:Version})
+Description: Network communication, cryptography and signaturing library - headers
+
+Package: libsodium-dbg
+Architecture: any
+Section: debug
+Priority: optional
+Depends: libsodium13 (= ${binary:Version}), ${misc:Depends}
+Description: libsodium debugging symbols
