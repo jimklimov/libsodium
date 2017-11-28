@@ -6,6 +6,17 @@ License:        ISC
 URL:            http://libsodium.org/
 #Source0:        http://download.libsodium.org/libsodium/releases/%{name}-%{version}.tar.gz
 Source0:        %{name}-%{version}.tar.gz
+BuildRequires:  ghostscript
+BuildRequires:  asciidoc
+BuildRequires:  automake
+BuildRequires:  autoconf
+BuildRequires:  libtool
+BuildRequires:  pkgconfig
+BuildRequires:  systemd-devel
+BuildRequires:  systemd
+%{?systemd_requires}
+BuildRequires:  xmlto
+BuildRequires:  gcc-c++
 
 %description
 Sodium is a new, easy-to-use software library for encryption, decryption, 
