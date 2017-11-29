@@ -6,6 +6,7 @@ License:        ISC
 URL:            http://libsodium.org/
 #Source0:        http://download.libsodium.org/libsodium/releases/%{name}-%{version}.tar.gz
 Source0:        %{name}-%{version}.tar.gz
+Source1:        %{name}-rpmlintrc
 BuildRequires:  ghostscript
 BuildRequires:  asciidoc
 BuildRequires:  automake
