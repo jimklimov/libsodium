@@ -18,7 +18,9 @@ BuildRequires:  systemd
 %{?systemd_requires}
 BuildRequires:  xmlto
 BuildRequires:  gcc-c++
+%if 0%{?suse_version} == 0
 Provides:       libsodium13 = %{version}
+%endif
 
 %description
 Sodium is a new, easy-to-use software library for encryption, decryption, 
