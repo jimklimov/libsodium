@@ -1,0 +1,31 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+export DH_COMPAT=10
+
+# OBS build: add
+#   Macros:
+#   %_with_drafts 1
+# at the BOTTOM of the OBS prjconf
+OBS_BUILD_CFG=/.build/build.dist
+ifeq ("$(wildcard $(OBS_BUILD_CFG))","")
+BUILDCONFIG=$(shell ls -1 /usr/src/packages/SOURCES/_buildconfig* | head -n 1)
+endif
+
+# Workaround for automake < 1.14 bug
+$(shell dpkg --compare-versions `dpkg-query -W -f='$${Version}\n' automake` lt 1:1.14 && mkdir -p config)
+
+override_dh_strip:
+	dh_strip --dbg-package=libsodium-dbg
+
+%:
+	dh $@ \
+		--parallel \
+		--with autoreconf
