@@ -18,7 +18,9 @@ BuildRequires:  systemd
 %{?systemd_requires}
 BuildRequires:  xmlto
 BuildRequires:  gcc-c++
-%if 0%{?suse_version} == 0
+%if 0%{?suse_version} > 0
+Obsoletes:      libsodium13
+Conflicts:      libsodium13
 Provides:       libsodium13 = %{version}
 %endif
 
