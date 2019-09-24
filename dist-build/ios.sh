@@ -20,6 +20,12 @@ export XCODEDIR=$(xcode-select -p)
 export IOS_SIMULATOR_VERSION_MIN=${IOS_SIMULATOR_VERSION_MIN-"6.0.0"}
 export IOS_VERSION_MIN=${IOS_VERSION_MIN-"6.0.0"}
 
+echo
+echo "Warnings related to headers being present but not usable are due to functions"
+echo "that didn't exist in the specified minimum iOS version level."
+echo "They can be safely ignored."
+echo
+
 mkdir -p $SIMULATOR32_PREFIX $SIMULATOR64_PREFIX $IOS32_PREFIX $IOS32s_PREFIX $IOS64_PREFIX || exit 1
 
 # Build for the simulator
@@ -40,7 +46,6 @@ else
 fi
 
 ./configure --host=i686-apple-darwin10 \
-            --disable-shared \
             ${LIBSODIUM_ENABLE_MINIMAL_FLAG} \
             --prefix="$SIMULATOR32_PREFIX" || exit 1
 
@@ -57,7 +62,6 @@ export LDFLAGS="-arch x86_64 -isysroot ${SDK} -mios-simulator-version-min=${IOS_
 make distclean > /dev/null
 
 ./configure --host=x86_64-apple-darwin10 \
-            --disable-shared \
             ${LIBSODIUM_ENABLE_MINIMAL_FLAG} \
             --prefix="$SIMULATOR64_PREFIX"
 
@@ -75,7 +79,6 @@ export LDFLAGS="-fembed-bitcode -mthumb -arch armv7 -isysroot ${SDK} -mios-versi
 make distclean > /dev/null
 
 ./configure --host=arm-apple-darwin10 \
-            --disable-shared \
             ${LIBSODIUM_ENABLE_MINIMAL_FLAG} \
             --prefix="$IOS32_PREFIX" || exit 1
 
@@ -88,7 +91,6 @@ export LDFLAGS="-fembed-bitcode -mthumb -arch armv7s -isysroot ${SDK} -mios-vers
 make distclean > /dev/null
 
 ./configure --host=arm-apple-darwin10 \
-            --disable-shared \
             ${LIBSODIUM_ENABLE_MINIMAL_FLAG} \
             --prefix="$IOS32s_PREFIX" || exit 1
 
@@ -101,7 +103,6 @@ export LDFLAGS="-fembed-bitcode -arch arm64 -isysroot ${SDK} -mios-version-min=$
 make distclean > /dev/null
 
 ./configure --host=arm-apple-darwin10 \
-            --disable-shared \
             ${LIBSODIUM_ENABLE_MINIMAL_FLAG} \
             --prefix="$IOS64_PREFIX" || exit 1
 
@@ -117,12 +118,21 @@ lipo -create \
   "$IOS32s_PREFIX/lib/libsodium.a" \
   "$IOS64_PREFIX/lib/libsodium.a" \
   -output "$PREFIX/lib/libsodium.a"
+lipo -create \
+  "$SIMULATOR32_PREFIX/lib/libsodium.dylib" \
+  "$SIMULATOR64_PREFIX/lib/libsodium.dylib" \
+  "$IOS32_PREFIX/lib/libsodium.dylib" \
+  "$IOS32s_PREFIX/lib/libsodium.dylib" \
+  "$IOS64_PREFIX/lib/libsodium.dylib" \
+  -output "$PREFIX/lib/libsodium.dylib"
 mv -f -- "$IOS32_PREFIX/include" "$PREFIX/"
+install_name_tool -id "@rpath/SODIUM.framework/libsodium.dylib" "$PREFIX/lib/libsodium.dylib"
 
 echo
 echo "libsodium has been installed into $PREFIX"
 echo
 file -- "$PREFIX/lib/libsodium.a"
+file -- "$PREFIX/lib/libsodium.dylib"
 
 # Cleanup
 rm -rf -- "$PREFIX/tmp"

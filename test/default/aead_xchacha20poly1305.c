@@ -20,7 +20,7 @@ tv(void)
         };
 #undef  MESSAGE
 #define MESSAGE "Ladies and Gentlemen of the class of '99: If I could offer you " \
-"only one tip for the future, sunscreen would be it."
+    "only one tip for the future, sunscreen would be it."
     unsigned char *m = (unsigned char *) sodium_malloc(MLEN);
     static const unsigned char nonce[crypto_aead_xchacha20poly1305_ietf_NPUBBYTES]
         = { 0x07, 0x00, 0x00, 0x00, 0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47,
@@ -64,6 +64,10 @@ tv(void)
         printf("detached ciphertext is bogus\n");
     }
 
+    if (crypto_aead_xchacha20poly1305_ietf_decrypt(NULL, 0, NULL, c, CLEN, ad,
+                                                   ADLEN, nonce, firstkey) != 0) {
+        printf("crypto_aead_xchacha20poly1305_ietf_decrypt() tag-only verification failed\n");
+    }
     if (crypto_aead_xchacha20poly1305_ietf_decrypt(m2, &m2len, NULL, c, CLEN, ad,
                                                    ADLEN, nonce, firstkey) != 0) {
         printf("crypto_aead_xchacha20poly1305_ietf_decrypt() failed\n");
@@ -118,7 +122,7 @@ tv(void)
     }
     m2len = 1;
     if (crypto_aead_xchacha20poly1305_ietf_decrypt(
-            m2, &m2len, NULL, NULL,
+            m2, &m2len, NULL, guard_page,
             randombytes_uniform(crypto_aead_xchacha20poly1305_ietf_ABYTES),
             NULL, 0U, nonce, firstkey) != -1) {
         printf("crypto_aead_xchacha20poly1305_ietf_decrypt() worked with a short "
